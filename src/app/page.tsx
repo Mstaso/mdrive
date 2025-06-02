@@ -45,9 +45,7 @@ interface FileItem extends BaseItem {
 
 type Item = FolderItem | FileItem;
 
-type MockData = {
-  [key: string]: Item;
-};
+type MockData = Record<string, Item>;
 
 const mockData: MockData = {
   root: {
@@ -139,7 +137,7 @@ export default function GoogleDriveClone() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
 
-  const folder = mockData[currentFolder] as FolderItem
+  const folder = mockData[currentFolder]
 
   const navigateToFolder = (folderId: string, folderName: string) => {
     setCurrentFolder(folderId)
@@ -267,34 +265,32 @@ export default function GoogleDriveClone() {
           {/* File list */}
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
-              {folder.children?.map((childId: string) => {
+              {folder && folder.type === "folder" && (folder as FolderItem).children?.map((childId: string) => {
                 const item = mockData[childId]
                 if (!item) return null
                 if (item.type === "folder") {
-                  const folderItem = item as FolderItem
                   return (
                     <div
-                      key={folderItem.id}
+                      key={item.id}
                       className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-accent transition-colors border"
-                      onClick={() => navigateToFolder(folderItem.id, folderItem.name)}
+                      onClick={() => navigateToFolder(item.id, item.name)}
                     >
                       <Folder className="h-6 w-6 text-blue-500 flex-shrink-0" />
-                      <span className="text-sm font-medium flex-1">{folderItem.name}</span>
+                      <span className="text-sm font-medium flex-1">{item.name}</span>
                       <span className="text-xs text-muted-foreground">Folder</span>
                     </div>
                   )
                 } else {
-                  const fileItem = item as FileItem
                   return (
                     <a
-                      key={fileItem.id}
-                      href={`#file-${fileItem.id}`}
+                      key={item.id}
+                      href={`#file-${item.id}`}
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors border"
                     >
-                      <div className="flex-shrink-0">{getFileIcon(fileItem.type)}</div>
-                      <span className="text-sm font-medium flex-1 truncate">{fileItem.name}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{fileItem.size}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{fileItem.modified}</span>
+                      <div className="flex-shrink-0">{getFileIcon(item.type)}</div>
+                      <span className="text-sm font-medium flex-1 truncate">{item.name}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{(item as FileItem).size}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{(item as FileItem).modified}</span>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
