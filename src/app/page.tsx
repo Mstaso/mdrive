@@ -24,7 +24,32 @@ import { Progress } from "~/components/ui/progress"
 import { ThemeProvider } from "~/components/theme-provider"
 
 // Mock data structure
-const mockData: any = {
+type FileType = "document" | "spreadsheet" | "presentation" | "pdf" | "image";
+
+interface BaseItem {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface FolderItem extends BaseItem {
+  type: "folder";
+  children: string[];
+}
+
+interface FileItem extends BaseItem {
+  type: FileType;
+  size: string;
+  modified: string;
+}
+
+type Item = FolderItem | FileItem;
+
+type MockData = {
+  [key: string]: Item;
+};
+
+const mockData: MockData = {
   root: {
     id: "root",
     name: "My Drive",
@@ -105,16 +130,16 @@ const mockData: any = {
     size: "5.7 MB",
     modified: "May 22, 2025",
   },
-}
+};
 
 export default function GoogleDriveClone() {
-  const [currentFolder, setCurrentFolder] = useState("root")
-  const [breadcrumbs, setBreadcrumbs] = useState([{ id: "root", name: "My Drive" }])
+  const [currentFolder, setCurrentFolder] = useState<string>("root")
+  const [breadcrumbs, setBreadcrumbs] = useState<{ id: string; name: string }[]>([{ id: "root", name: "My Drive" }])
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
 
-  const folder = mockData[currentFolder]
+  const folder = mockData[currentFolder] as FolderItem
 
   const navigateToFolder = (folderId: string, folderName: string) => {
     setCurrentFolder(folderId)
@@ -244,30 +269,32 @@ export default function GoogleDriveClone() {
             <div className="space-y-2">
               {folder.children?.map((childId: string) => {
                 const item = mockData[childId]
-
+                if (!item) return null
                 if (item.type === "folder") {
+                  const folderItem = item as FolderItem
                   return (
                     <div
-                      key={item.id}
+                      key={folderItem.id}
                       className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-accent transition-colors border"
-                      onClick={() => navigateToFolder(item.id, item.name)}
+                      onClick={() => navigateToFolder(folderItem.id, folderItem.name)}
                     >
                       <Folder className="h-6 w-6 text-blue-500 flex-shrink-0" />
-                      <span className="text-sm font-medium flex-1">{item.name}</span>
+                      <span className="text-sm font-medium flex-1">{folderItem.name}</span>
                       <span className="text-xs text-muted-foreground">Folder</span>
                     </div>
                   )
                 } else {
+                  const fileItem = item as FileItem
                   return (
                     <a
-                      key={item.id}
-                      href={`#file-${item.id}`}
+                      key={fileItem.id}
+                      href={`#file-${fileItem.id}`}
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors border"
                     >
-                      <div className="flex-shrink-0">{getFileIcon(item.type)}</div>
-                      <span className="text-sm font-medium flex-1 truncate">{item.name}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{item.size}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{item.modified}</span>
+                      <div className="flex-shrink-0">{getFileIcon(fileItem.type)}</div>
+                      <span className="text-sm font-medium flex-1 truncate">{fileItem.name}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{fileItem.size}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{fileItem.modified}</span>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
