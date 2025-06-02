@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type SetStateAction } from "react"
 import { Cloud, File, FileText, Folder, ImageIcon, Loader2, MoreVertical, Plus, Upload } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
@@ -24,7 +24,7 @@ import { Progress } from "~/components/ui/progress"
 import { ThemeProvider } from "~/components/theme-provider"
 
 // Mock data structure
-const mockData = {
+const mockData: any = {
   root: {
     id: "root",
     name: "My Drive",
@@ -116,7 +116,7 @@ export default function GoogleDriveClone() {
 
   const folder = mockData[currentFolder]
 
-  const navigateToFolder = (folderId, folderName) => {
+  const navigateToFolder = (folderId: string, folderName: string) => {
     setCurrentFolder(folderId)
 
     // Update breadcrumbs
@@ -161,7 +161,7 @@ export default function GoogleDriveClone() {
     }, 300)
   }
 
-  const getFileIcon = (type) => {
+  const getFileIcon = (type: string) => {
     switch (type) {
       case "document":
         return <FileText className="h-5 w-5 text-blue-500" />
@@ -242,7 +242,7 @@ export default function GoogleDriveClone() {
           {/* File list */}
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
-              {folder.children?.map((childId) => {
+              {folder.children?.map((childId: string) => {
                 const item = mockData[childId]
 
                 if (item.type === "folder") {
