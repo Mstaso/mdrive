@@ -265,7 +265,7 @@ export default function GoogleDriveClone() {
           {/* File list */}
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
-              {folder && folder.type === "folder" && (folder as FolderItem).children?.map((childId: string) => {
+              {folder?.type === "folder" && folder.children?.map((childId: string) => {
                 const item = mockData[childId]
                 if (!item) return null
                 if (item.type === "folder") {
@@ -289,8 +289,8 @@ export default function GoogleDriveClone() {
                     >
                       <div className="flex-shrink-0">{getFileIcon(item.type)}</div>
                       <span className="text-sm font-medium flex-1 truncate">{item.name}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{(item as FileItem).size}</span>
-                      <span className="text-xs text-muted-foreground min-w-0">{(item as FileItem).modified}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{item.size}</span>
+                      <span className="text-xs text-muted-foreground min-w-0">{item.modified}</span>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
