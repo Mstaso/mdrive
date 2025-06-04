@@ -40,7 +40,11 @@ export default function DriveContents(props: {
   folderId: number;
   parents: DBFolder[];
 }) {
-  const currentFolder = props.folderId;
+  const currentFolder = props.folderId
+    ? props.folderId
+    : props.folders[0]?.id
+      ? props.folders[0]?.id
+      : 0;
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -145,7 +149,7 @@ export default function DriveContents(props: {
           {/* Breadcrumbs */}
           <div className="bg-secondary border-b p-4">
             <div className="flex items-center gap-1 text-sm">
-              {props.parents.map((crumb, index) => (
+              {props.parents?.map((crumb, index) => (
                 <Link href={`/f/${crumb.id}`} key={crumb.id}>
                   <div className="flex items-center">
                     {index > 0 && (
@@ -164,13 +168,11 @@ export default function DriveContents(props: {
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
               {/* List folders */}
-              {getFoldersByParent(props.folders, currentFolder).map(
-                (folder) => (
-                  <FolderRow key={folder.id} folder={folder} />
-                ),
+              {getFoldersByParent(props.folders, currentFolder)?.map(
+                (folder) => <FolderRow key={folder.id} folder={folder} />,
               )}
               {/* List files */}
-              {getFilesByParent(props.files, currentFolder).map((file) => (
+              {getFilesByParent(props.files, currentFolder)?.map((file) => (
                 <FileRow key={file.id} file={file} getFileIcon={getFileIcon} />
               ))}
             </div>

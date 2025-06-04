@@ -33,7 +33,7 @@ export default async function Sandbox() {
             })
             .$returningId();
 
-          const insertableFolders = mockFolders.map((folder) => ({
+          const insertableFolders = mockFolders?.map((folder) => ({
             name: folder.name,
             ownerId: "mock-user-id",
             parent: rootFolder[0]!.id,
