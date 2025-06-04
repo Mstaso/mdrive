@@ -1,21 +1,21 @@
 import { Folder as LucideFolder } from "lucide-react";
-import type { Folder as MockFolder } from "~/lib/mock-data";
+import type { DBFolder } from "~/server/db/types";
 
 interface FolderRowProps {
-  folder: MockFolder;
-  navigateToFolder: (id: string, name: string) => void;
+  folder: DBFolder;
+  navigateToFolder: (id: number, name: string) => void;
 }
 
 export function FolderRow({ folder, navigateToFolder }: FolderRowProps) {
   return (
     <div
       key={folder.id}
-      className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-accent transition-colors border"
+      className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors"
       onClick={() => navigateToFolder(folder.id, folder.name)}
     >
-      <LucideFolder className="h-6 w-6 text-blue-500 flex-shrink-0" />
-      <span className="text-sm font-medium flex-1">{folder.name}</span>
-      <span className="text-xs text-muted-foreground">Folder</span>
+      <LucideFolder className="h-6 w-6 flex-shrink-0 text-blue-500" />
+      <span className="flex-1 text-sm font-medium">{folder.name}</span>
+      <span className="text-muted-foreground text-xs">Folder</span>
     </div>
   );
-} 
+}

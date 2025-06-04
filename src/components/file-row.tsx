@@ -1,5 +1,4 @@
 import { MoreVertical } from "lucide-react";
-import type { File as MockFile } from "~/lib/mock-data";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -9,9 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import React from "react";
+import type { DBFile } from "~/server/db/types";
 
 interface FileRowProps {
-  file: MockFile;
+  file: DBFile;
   getFileIcon: (fileName: string) => React.ReactNode;
 }
 
