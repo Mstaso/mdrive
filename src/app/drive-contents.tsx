@@ -178,10 +178,14 @@ export default function DriveContents(props: {
               ))}
             </div>
           </div>
+          {/* @ts-ignore */}
           <UploadButton
-            endpoint="imageUploader"
+            endpoint="driveUploader"
             onClientUploadComplete={() => {
               navigate.refresh();
+            }}
+            input={{
+              folderId: currentFolder,
             }}
           />
         </div>
