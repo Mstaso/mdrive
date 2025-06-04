@@ -7,5 +7,7 @@ export default async function Mdrive() {
     QUERIES.getAllFiles(),
   ]);
 
-  return <DriveContents files={files} folders={folders} />;
+  return (
+    <DriveContents files={files} folders={folders} folderId={0} parents={[]} />
+  );
 }

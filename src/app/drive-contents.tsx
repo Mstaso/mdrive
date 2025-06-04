@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +26,13 @@ import { FolderRow } from "../components/folder-row";
 import { FileRow } from "../components/file-row";
 import type { DBFile, DBFolder } from "~/server/db/types";
 import Link from "next/link";
+import {
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  UserButton,
+} from "@clerk/nextjs";
 
 // Helper functions to get folders and files by parent
 const getFoldersByParent = (folders: DBFolder[], parentId: number) =>
@@ -130,20 +136,13 @@ export default function DriveContents(props: {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                onClick={handleUpload}
-              >
-                <Plus className="h-5 w-5" />
-              </Button>
-              <Avatar>
-                <AvatarImage src="/placeholder-user.jpg" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-            </div>
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </header>
 
           {/* Breadcrumbs */}
@@ -164,7 +163,6 @@ export default function DriveContents(props: {
             </div>
           </div>
 
-          {/* File list */}
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
               {/* List folders */}
