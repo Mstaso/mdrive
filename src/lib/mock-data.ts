@@ -1,4 +1,4 @@
-export interface File {
+export interface IFile {
     id: string;
     name: string;
     type: "file";
@@ -7,14 +7,14 @@ export interface File {
     size: string;
   }
   
-  export type Folder = {
+  export type IFolder = {
     id: string;
     name: string;
     type: "folder";
     parent: string | null;
   };
   
-  export const mockFolders: Folder[] = [
+  export const mockFolders: IFolder[] = [
     { id: "root", name: "root", type: "folder", parent: null },
     { id: "1", name: "Documents", type: "folder", parent: "root" },
     { id: "2", name: "Images", type: "folder", parent: "root" },
@@ -22,7 +22,7 @@ export interface File {
     { id: "4", name: "Presentations", type: "folder", parent: "3" },
   ];
   
-  export const mockFiles: File[] = [
+  export const mockFiles: IFile[] = [
     {
       id: "4",
       name: "Resume.pdf",
