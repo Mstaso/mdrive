@@ -9,18 +9,12 @@ import {
 import { eq, isNull, and } from "drizzle-orm";
 
 export const QUERIES = {
-    getAllFolders: function () {
-        return db
-          .select()
-          .from(foldersSchema)
-          .orderBy(foldersSchema.id);
-      },
-      getAllFiles: function () {
-        return db
-          .select()
-          .from(filesSchema)
-          .orderBy(filesSchema.id);
-      },
+  getAllFolders: function () {
+    return db.select().from(foldersSchema).orderBy(foldersSchema.id);
+  },
+  getAllFiles: function () {
+    return db.select().from(filesSchema).orderBy(filesSchema.id);
+  },
   getFolders: function (folderId: number) {
     return db
       .select()
@@ -36,6 +30,7 @@ export const QUERIES = {
       .orderBy(filesSchema.id);
   },
   getAllParentsForFolder: async function (folderId: number) {
+    console.log("folder", folderId);
     const parents = [];
     let currentId: number | null = folderId;
     while (currentId !== null) {
@@ -43,7 +38,6 @@ export const QUERIES = {
         .selectDistinct()
         .from(foldersSchema)
         .where(eq(foldersSchema.id, currentId));
-
       if (!folder[0]) {
         throw new Error("Parent folder not found");
       }
