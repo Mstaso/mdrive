@@ -33,6 +33,8 @@ import {
   SignedIn,
   UserButton,
 } from "@clerk/nextjs";
+import { UploadButton } from "@uploadthing/react";
+import { useRouter } from "next/navigation";
 
 // Helper functions to get folders and files by parent
 const getFoldersByParent = (folders: DBFolder[], parentId: number) =>
@@ -56,6 +58,7 @@ export default function DriveContents(props: {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
+  const navigate = useRouter();
   const handleUpload = () => {
     setUploadDialogOpen(true);
     setUploadProgress(0);
@@ -175,6 +178,12 @@ export default function DriveContents(props: {
               ))}
             </div>
           </div>
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={() => {
+              navigate.refresh();
+            }}
+          />
         </div>
 
         {/* Upload Dialog */}
