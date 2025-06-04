@@ -10,9 +10,9 @@ export default async function FolderPage(props: {
 
   const parsedFolderId = parseInt(params.folderId);
 
-  // if (isNaN(parsedFolderId)) {
-  //   return <div>Invalid folder ID</div>;
-  // }
+  if (isNaN(parsedFolderId)) {
+    return <div>Invalid folder ID</div>;
+  }
 
   const [folders, files, parents] = await Promise.all([
     QUERIES.getFolders(parsedFolderId),
