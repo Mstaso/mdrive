@@ -10,44 +10,59 @@ export default async function Sandbox() {
   //     throw new Error("User not found");
   //   }
 
-  const folders = await db.select().from(folders_table);
-  // .where(eq(folders_table.ownerId, user.userId));
+  // const folders = await db.select().from(folders_table);
+  // // .where(eq(folders_table.ownerId, user.userId));
 
-  console.log(folders);
+  // console.log(folders);
 
   return (
     <div>
       <form
         action={async () => {
           "use server";
-          function parseId(id: string): number {
-            // You may want to use parseInt or a mapping if your IDs are not numeric
-            return id === "root" ? 0 : parseInt(id, 10);
-          }
-          for (const folder of mockFolders) {
-            await db.insert(folders_table).values({
-              id: parseId(folder.id),
-              name: folder.name,
-              parent: folder.parent ? parseId(folder.parent) : null,
-              // Add ownerId and createdAt if required by your schema
+          // function parseId(id: string): number {
+          //   // You may want to use parseInt or a mapping if your IDs are not numeric
+          //   return id === "root" ? 0 : parseInt(id, 10);
+          // }
+          const rootFolder = await db
+            .insert(folders_table)
+            .values({
+              name: "root",
               ownerId: "mock-user-id",
-              // createdAt: new Date(),
-            });
-          }
+              parent: null,
+            })
+            .$returningId();
 
-          // Insert files
-          for (const file of mockFiles) {
-            await db.insert(files_table).values({
-              id: parseId(file.id),
-              name: file.name,
-              url: file.url,
-              size: parseInt(file.size), // If your DB expects a number
-              parent: parseId(file.parent),
-              // Add ownerId and createdAt if required by your schema
-              ownerId: "mock-user-id",
-              // createdAt: new Date(),
-            });
-          }
+          const insertableFolders = mockFolders.map((folder) => ({
+            name: folder.name,
+            ownerId: "mock-user-id",
+            parent: rootFolder[0]!.id,
+          }));
+          await db.insert(folders_table).values(insertableFolders);
+          // for (const folder of mockFolders) {
+          //   await db.insert(folders_table).values({
+          //     id: parseId(folder.id),
+          //     name: folder.name,
+          //     parent: folder.parent ? parseId(folder.parent) : null,
+          //     // Add ownerId and createdAt if required by your schema
+          //     ownerId: "mock-user-id",
+          //     // createdAt: new Date(),
+          //   });
+          // }
+
+          // // Insert files
+          // for (const file of mockFiles) {
+          //   await db.insert(files_table).values({
+          //     id: parseId(file.id),
+          //     name: file.name,
+          //     url: file.url,
+          //     size: parseInt(file.size), // If your DB expects a number
+          //     parent: parseId(file.parent),
+          //     // Add ownerId and createdAt if required by your schema
+          //     ownerId: "mock-user-id",
+          //     // createdAt: new Date(),
+          //   });
+          // }
 
           console.log("done");
         }}

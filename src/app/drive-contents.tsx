@@ -26,6 +26,7 @@ import { ThemeProvider } from "~/components/theme-provider";
 import { FolderRow } from "../components/folder-row";
 import { FileRow } from "../components/file-row";
 import type { DBFile, DBFolder } from "~/server/db/types";
+import Link from "next/link";
 
 // Helper functions to get folders and files by parent
 const getFoldersByParent = (folders: DBFolder[], parentId: number) =>
@@ -36,35 +37,14 @@ const getFilesByParent = (files: DBFile[], parentId: number) =>
 export default function DriveContents(props: {
   files: DBFile[];
   folders: DBFolder[];
+  folderId: number;
+  parents: DBFolder[];
 }) {
-  const [currentFolder, setCurrentFolder] = useState<number>(0);
-  const [breadcrumbs, setBreadcrumbs] = useState<
-    { id: number; name: string }[]
-  >([{ id: 0, name: "Mdrive" }]);
+  const currentFolder = props.folderId;
+
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-
-  const navigateToFolder = (folderId: number, folderName: string) => {
-    setCurrentFolder(folderId);
-
-    // Update breadcrumbs
-    if (folderId === 0) {
-      setBreadcrumbs([{ id: 0, name: "Mdrive" }]);
-    } else {
-      const newBreadcrumbs = [...breadcrumbs];
-      // Check if we're going back to a folder in the breadcrumb
-      const existingIndex = newBreadcrumbs.findIndex((b) => b.id === folderId);
-
-      if (existingIndex >= 0) {
-        // If we're navigating to a folder already in breadcrumbs, trim the array
-        setBreadcrumbs(newBreadcrumbs.slice(0, existingIndex + 1));
-      } else {
-        // Otherwise add the new folder to breadcrumbs
-        setBreadcrumbs([...newBreadcrumbs, { id: folderId, name: folderName }]);
-      }
-    }
-  };
 
   const handleUpload = () => {
     setUploadDialogOpen(true);
@@ -165,19 +145,17 @@ export default function DriveContents(props: {
           {/* Breadcrumbs */}
           <div className="bg-secondary border-b p-4">
             <div className="flex items-center gap-1 text-sm">
-              {breadcrumbs.map((crumb, index) => (
-                <div key={crumb.id} className="flex items-center">
-                  {index > 0 && (
-                    <span className="text-muted-foreground mx-1">/</span>
-                  )}
-                  <Button
-                    variant="link"
-                    className="h-auto p-0"
-                    onClick={() => navigateToFolder(crumb.id, crumb.name)}
-                  >
-                    {crumb.name}
-                  </Button>
-                </div>
+              {props.parents.map((crumb, index) => (
+                <Link href={`/f/${crumb.id}`} key={crumb.id}>
+                  <div className="flex items-center">
+                    {index > 0 && (
+                      <span className="text-muted-foreground mx-1">/</span>
+                    )}
+                    <Button variant="link" className="h-auto p-0">
+                      {crumb.name === "root" ? "Mdrive" : crumb.name}
+                    </Button>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -188,11 +166,7 @@ export default function DriveContents(props: {
               {/* List folders */}
               {getFoldersByParent(props.folders, currentFolder).map(
                 (folder) => (
-                  <FolderRow
-                    key={folder.id}
-                    folder={folder}
-                    navigateToFolder={navigateToFolder}
-                  />
+                  <FolderRow key={folder.id} folder={folder} />
                 ),
               )}
               {/* List files */}
