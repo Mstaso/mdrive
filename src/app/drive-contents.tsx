@@ -163,7 +163,6 @@ export default function DriveContents(props: {
             </div>
           </div>
 
-          {/* File list */}
           <div className="flex-1 overflow-auto p-4">
             <div className="space-y-2">
               {/* List folders */}
