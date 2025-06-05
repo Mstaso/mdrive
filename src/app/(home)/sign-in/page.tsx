@@ -1,9 +1,10 @@
+import { SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { HardDrive, ArrowRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 
-export default function HomePage() {
+export default function SignInPage() {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       {/* Header */}
@@ -28,29 +29,15 @@ export default function HomePage() {
               videos. Access everything from any device, anytime.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <form
-                action={async () => {
-                  "use server";
-
-                  const session = await auth();
-
-                  if (!session.userId) {
-                    return redirect("/sign-in");
-                  }
-
-                  // return redirect("/f/4503599627370498");
-                  return redirect("/drive");
-                }}
-              >
+              <SignInButton mode="modal" forceRedirectUrl="/drive">
                 <Button
                   size="lg"
                   className="rounded-lg border-0 bg-gradient-to-r from-purple-700 to-purple-900 px-8 py-6 text-lg text-white hover:from-purple-800 hover:to-purple-950"
-                  type="submit"
                 >
-                  Get Started
+                  Sign In
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </form>
+              </SignInButton>
             </div>
           </div>
         </div>
