@@ -1,4 +1,4 @@
-import DriveContents from "./drive-contents";
+import DriveContents from "../../components/drive-contents";
 import { QUERIES } from "~/server/db/queries";
 
 export default async function Mdrive() {

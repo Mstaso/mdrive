@@ -22,8 +22,8 @@ import {
 } from "~/components/ui/dialog";
 import { Progress } from "~/components/ui/progress";
 import { ThemeProvider } from "~/components/theme-provider";
-import { FolderRow } from "../components/folder-row";
-import { FileRow } from "../components/file-row";
+import { FolderRow } from "./folder-row";
+import { FileRow } from "./file-row";
 import type { DBFile, DBFolder } from "~/server/db/types";
 import Link from "next/link";
 import {
