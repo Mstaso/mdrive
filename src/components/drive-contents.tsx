@@ -139,7 +139,6 @@ export default function DriveContents(props: {
                 </div>
               </div>
             </div>
-
             <SignedOut>
               <SignInButton />
               <SignUpButton />

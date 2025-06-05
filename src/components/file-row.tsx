@@ -9,6 +9,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import React from "react";
 import type { DBFile } from "~/server/db/types";
+import { deleteFile } from "~/server/actions";
+
+import { useRouter } from "next/navigation";
 
 interface FileRowProps {
   file: DBFile;
@@ -16,6 +19,11 @@ interface FileRowProps {
 }
 
 export function FileRow({ file, getFileIcon }: FileRowProps) {
+  const navigate = useRouter();
+  const handleDelete = async () => {
+    await deleteFile(file.id);
+    // navigate.refresh();
+  };
   return (
     <a
       key={file.id}
@@ -37,7 +45,9 @@ export function FileRow({ file, getFileIcon }: FileRowProps) {
           <DropdownMenuItem>Download</DropdownMenuItem>
           <DropdownMenuItem>Share</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
+          <DropdownMenuItem className="text-red-500" onClick={handleDelete}>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </a>
