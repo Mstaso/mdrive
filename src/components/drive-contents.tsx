@@ -35,6 +35,7 @@ import {
 } from "@clerk/nextjs";
 import { UploadButton } from "@uploadthing/react";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 
 // Helper functions to get folders and files by parent
 const getFoldersByParent = (folders: DBFolder[], parentId: number) =>
@@ -183,6 +184,7 @@ export default function DriveContents(props: {
             endpoint="driveUploader"
             onClientUploadComplete={() => {
               navigate.refresh();
+              posthog.capture("fileupload", { fileId: currentFolder });
             }}
             input={{
               folderId: currentFolder,
