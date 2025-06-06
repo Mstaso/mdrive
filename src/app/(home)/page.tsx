@@ -37,8 +37,6 @@ export default function HomePage() {
                   if (!session.userId) {
                     return redirect("/sign-in");
                   }
-
-                  // return redirect("/f/4503599627370498");
                   return redirect("/drive");
                 }}
               >

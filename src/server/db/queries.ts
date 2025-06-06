@@ -80,12 +80,24 @@ export const MUTATIONS = {
       ownerId: input.userId,
     });
   },
+  createFolder: async function (input: {
+    folder: {
+      name: string;
+      parent: number;
+    };
+    userId: string;
+  }) {
+    return await db.insert(foldersSchema).values({
+      ...input.folder,
+      ownerId: input.userId,
+    });
+  },
 
   onboardUser: async function (userId: string) {
     const rootFolder = await db
       .insert(foldersSchema)
       .values({
-        name: "Root",
+        name: "Mdrive",
         parent: null,
         ownerId: userId,
       })
