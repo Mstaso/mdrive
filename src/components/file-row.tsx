@@ -45,12 +45,20 @@ export function FileRow({ file, getFileIcon }: FileRowProps) {
         a.click();
       });
   };
+
+  const handleDragStart = (e: React.DragEvent) => {
+    // Store the file ID in the drag data
+    e.dataTransfer.setData("text/plain", file.id.toString());
+    e.dataTransfer.effectAllowed = "move";
+  };
   return (
     <a
       href={file.url}
       className="hover:bg-accent flex items-center gap-3 rounded-lg border p-3 transition-colors"
       target="_blank"
       rel="noopener noreferrer"
+      draggable="true"
+      onDragStart={handleDragStart}
     >
       <div className="flex-shrink-0">{getFileIcon(file.name)}</div>
       <span className="flex-1 truncate text-sm font-medium">{file.name}</span>

@@ -93,6 +93,22 @@ export const MUTATIONS = {
     });
   },
 
+  updateFolderName: async function (
+    folderId: number,
+    newName: string,
+    userId: string,
+  ) {
+    return await db
+      .update(foldersSchema)
+      .set({ name: newName })
+      .where(
+        and(
+          eq(foldersSchema.id, folderId),
+          eq(foldersSchema.ownerId, userId), // Ensure user owns the folder
+        ),
+      );
+  },
+
   onboardUser: async function (userId: string) {
     const rootFolder = await db
       .insert(foldersSchema)
@@ -124,5 +140,20 @@ export const MUTATIONS = {
     ]);
 
     return rootFolderId;
+  },
+  updateFileParent: async function (
+    fileId: number,
+    newParentId: number,
+    userId: string,
+  ) {
+    return await db
+      .update(filesSchema)
+      .set({ parent: newParentId })
+      .where(
+        and(
+          eq(filesSchema.id, fileId),
+          eq(filesSchema.ownerId, userId), // Ensure user owns the file
+        ),
+      );
   },
 };

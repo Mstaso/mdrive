@@ -96,7 +96,44 @@ export async function deleteFolder(folderId: number) {
     .where(eq(folders_table.id, folderId));
 
   console.log(dbDeleteResult, "deleted folder and files");
+}
 
-  // Revalidate the page to show the new folder
+export async function moveFileToFolder(fileId: number, folderId: number) {
+  const session = await auth();
+
+  if (!session.userId) {
+    throw new Error("Unauthorized");
+  }
+
+  // Update the file's parent folder
+  await MUTATIONS.updateFileParent(fileId, folderId, session.userId);
+
   revalidatePath("/");
+
+  return { success: true };
+}
+
+export async function renameFolder(folderId: number, newName: string) {
+  const session = await auth();
+
+  if (!session.userId) {
+    throw new Error("Unauthorized");
+  }
+
+  if (!newName.trim()) {
+    throw new Error("Folder name cannot be empty");
+  }
+
+  if (newName.length > 255) {
+    throw new Error("Folder name is too long");
+  }
+
+  try {
+    await MUTATIONS.updateFolderName(folderId, newName.trim(), session.userId);
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to rename folder:", error);
+    throw new Error("Failed to rename folder");
+  }
 }
